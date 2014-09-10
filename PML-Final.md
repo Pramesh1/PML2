@@ -6,10 +6,11 @@ output: html_document
 ---
 
 #### Executive Summary:
-The goal of this exercise is to build a prediction model to automatically predict the how people perform some predetermined types of exercises. The model is built with the help of  a **training data set** , cross validated with a **testing data set** and finally applied once to a 3rd **test data set**. The model built has a very good **accuracy of 99%** and was successfully applied to the test data set..
+The goal of this exercise is to build a model to automatically predict how people perform some predetermined types of exercises. The model is : built using a **training data set** , cross validated with a **testing data set** and finally, executed only  once with a 3rd **test data set**.An **accuracy of 99%** was achieved with the model built, making it a reliable predicting tool in the current case.
 
-#### I. load libraries and data and have a sneak preview  
-  
+#### I. Load libraries and data  
+Preload all libraries and have a sneak preview of the data set 
+ 
 
 ```r
 library(caret)
@@ -24,14 +25,14 @@ data_testing<-data_tst
 ```
 
 
-####II.  Exploratory Data Analysis - streamlining  
+####II.  Exploratory Data Analysis - (Streamlining)  
 
-The first step is to perform some data exploration analysis , clean the data sets and extract information on data types, variables  and so on.  
+Once libraries and data loaded an dout of the way, the next step was to perform a measure of Exploratory Data Analysis to clean the data sets, identify variables, get information on data types, and so on.  
 It was noted that  
-- The dependent variable (**Classe**) is already a *factor* with 5 levels  
+- The dependent variable (**Classe**) is of type '*factor*' with 5 levels  
 - There seems to be a lot of non available data (**NA**)  
 
-The next step is to clean and prepare the data sets 
+The next phase was then to clean and prepare the data sets for computation. 
 
 
 ##### 1. Removing columns with "NA" and irrelevant variables (Column 1:7)
@@ -39,15 +40,19 @@ The next step is to clean and prepare the data sets
 
 
 ```r
+#TRAINING Data Set
 data_train <- data_training[ , colSums(is.na(data_training)) == 0]  # Keep columns where the sum of NA is Zero
-data_train<- data_train[,-(1:7)]
+data_train<- data_train[,-(1:7)] # Get rid of columns 1-7
 
+#TEST Data Set
 data_test <- data_testing[ , colSums(is.na(data_testing)) == 0]  
 data_test<- data_test[,-(1:7)]
 ```
 
-##### 2. Make the nearzero diagnosis and remove
+##### 2. Make the nearzero diagnosis
 
+To further see if there are more candidates for removel , perform the "Nearzero" test.
+(ref http://tgmstat.wordpress.com/2014/03/06/near-zero-variance-predictors/)
 
 
 ```r
@@ -62,10 +67,14 @@ nzv_train[nzv_train$nzv, ]
 
 This diagnosis proposed **no candidate**(variable) for removal.  
 
-The PCA analysis was also performed but later removed from this assignment.  
-There was one unknown problem which was taking too much time to solving.
+
+The **PCA analysis** was also performed but later dropped from this assignment.  
+I had an unknown programming problem which was taking too much time to solving.
 
 ##### 3. Remove highly correlated variables
+
+Last step in the EDA was to get rid of the highly correlated variables.
+There is a lot of discussion on this theme . One author (N.R.Draper and H.smith "Applied regression Analysis") notes that *".. the existence of intercorrelation may be an obstacle for interpretation"*.
 
 
 ```r
@@ -77,11 +86,11 @@ data_test<-data_test[,-cor_train]
 
 ####III.  Split the Data set
 
-The training data set **(data_training)** set is split in 2 :  
- - one set will be used for training the model  
- - the 2nd set will be used to crossvalidate the model
+The training data set **(data_training)** set was split in 2 :  
+ - one set will used for training the model  
+ - the 2nd set used to crossvalidate the model
 
-A default 60/40 split will be performed.
+A default 60/40 split was performed.
 
 
 
@@ -106,18 +115,18 @@ varImpPlot(ModFit, cex = 0.7)
 
 ![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
 
-\newline \linebreak 
 
-**Gini** is defined as *"inequity"* or a measure of *"node impurity"* in tree-based classification.  
+
+**Gini** is defined as *"inequity"* or a measure of *"node impurity"* in tree-based classification.(ref. Course materila)  
 A **low Gini** (i.e. higher decrease in Gini) means that a particular predictor variable plays a **greater** role in partitioning the data into the defined classes.
 There is a clear visualisation of the **"important"** variables.
 
 
 ####V.  Cross validation and Accuracy testing
 
-We apply the **confusion matrix** to both the *training* and *test* set and check the **accuracy** of our model.
+The **confusion matrix** was the applied to both the `*training*` and `*test*` set to check the **accuracy** of our model.
 
-We get :  
+Result of the verification :  
  - Training set : **100% accurate** as expected  
  - Testing set : **>99% accurate**
 
